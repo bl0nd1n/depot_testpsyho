@@ -1,6 +1,11 @@
 <li>
   <%= gravatar_for user, size: 52 %>
-  <%= link_to user.name, user %>
+  <%= link_to user.name, user %> 
+
+
+  <p>Followers: <%= user.followers.count%></p>
+  <%= pluralize(current_user.reputation_value_for(:votes).to_i, "likes") %>
+  
   <% if current_user.admin? && !current_user?(user) %>
     | <%= link_to "delete", user, method: :delete,
                                   data: { confirm: "You sure?" } %>

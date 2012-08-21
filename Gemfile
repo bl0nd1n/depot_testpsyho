@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails', '3.2.6'
+gem 'rails-i18n'
 gem 'jquery-rails', '2.0.0'
 gem 'bootstrap-sass', '2.0.0'
 gem 'bcrypt-ruby', '3.0.1'
@@ -11,11 +12,14 @@ gem 'execjs', :git => 'git://github.com/kennyj/execjs.git'
 gem 'russian'
   gem 'therubyracer', :platform => :ruby
  gem 'carrierwave'
- gem 'rmagick'
+# gem 'rmagick'
  gem "mini_magick"
-gem "opinio"
+ gem 'activerecord-reputation-system', require: 'reputation_system'
+gem 'twitter-bootstrap-rails'
 gem "bundler"
-gem 'acts_as_commentable_with_threading'
+#gem "meta_search"  # Last officially released gem
+
+
 
 group :development, :test do
   gem 'sqlite3', '1.3.5'
@@ -32,7 +36,8 @@ group :assets do
 end
 
 #Deploy Capistrano
-  gem 'rvm-capistrano'
+ gem 'capistrano'
+ gem 'unicorn'
 
 group :test do
   gem 'capybara', '1.1.2'
@@ -47,8 +52,7 @@ group :test do
 end
 
 group :production do
-  gem 'mysql2'
+  gem 'pg'
 end
 gem "kaminari"
 
-gem 'capistrano'

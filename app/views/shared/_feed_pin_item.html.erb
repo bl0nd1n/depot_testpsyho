@@ -1,22 +1,3 @@
-<%= javascript_include_tag('assets/javascripts/jquery-1.7.2.min.js') %>
-<%= javascript_include_tag('assets/javascripts/jquery.masonry.min.js') %>
-<script type="text/javascript" src="public/js/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="public/js/jquery.masonry.min.js"></script>
-
-<script type="text/javascript">
- $(document).ready(function(){ 
- $('#container').masonry({
- itemSelector: '.item',
- singleMode: true,
-sResizable: true,
- isAnimated: true,
- animationOptions: { 
- queue: false, 
- duration: 500 
- }
- }); 
- });
-</script>
 
 <div id="container">
 	 <div class="item">

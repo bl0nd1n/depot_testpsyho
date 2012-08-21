@@ -2,9 +2,29 @@ class MypostsController < ApplicationController
 before_filter :signed_in_user, only: [:create, :destroy]
   # GET /myposts
   # GET /myposts.json
-  def index
-    @myposts = Mypost.all
+  
 
+  
+    def vote
+  value = params[:type] == "up" ? 1 : -1
+  @mypost = Mypost.find(params[:id])
+  @mypost.add_or_update_evaluation(:votes, value, current_user)
+  redirect_to :back, notice: "Thank you for voting!"
+end
+
+  
+  def fresh
+  @myposts = Mypost.all(order: 'myposts.created_at DESC')
+    respond_to do |format|
+      format.html # fresh.html.erb
+      format.json { render json: @myposts }
+    end
+end
+  
+  def index
+   
+##   to dislpay by fresh @myposts = Mypost.all
+    @myposts = Mypost.find_with_reputation(:votes, :all, order: 'votes desc')
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @myposts }
@@ -15,12 +35,13 @@ before_filter :signed_in_user, only: [:create, :destroy]
   # GET /myposts/1.json
   def show
     @mypost = Mypost.find(params[:id])
+	@myposts = Mypost.all
     @feed_me_items = []
-	#@comment = @mypost.comments.new
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @mypost }
     end
+	
   end
 
   # GET /myposts/new
@@ -79,10 +100,10 @@ before_filter :signed_in_user, only: [:create, :destroy]
   def destroy
     @mypost = Mypost.find(params[:id])
     @mypost.destroy
-	redirect_to root_path
+	
 
     respond_to do |format|
-      format.html { redirect_to myposts_url }
+      format.html { redirect_to myfeed_path }
       format.json { head :no_content }
     end
 		 end
@@ -99,5 +120,7 @@ before_filter :signed_in_user, only: [:create, :destroy]
   def feed_my
 Mypost.where(id)
   end
+  
+
   
 end

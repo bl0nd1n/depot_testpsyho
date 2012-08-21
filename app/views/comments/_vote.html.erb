@@ -1,0 +1,9 @@
+<div class="comment">
+
+     <%= pluralize comment.reputation_value_for(:votes).to_i, "vote" %>
+
+      | <%= link_to "up", vote_mypost_path(@comment, type: "up"), method: "post" %>
+      | <%= link_to "down", vote_mypost_path(@comment, type: "down"), method: "post" %>
+
+
+</div>

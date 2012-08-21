@@ -4,10 +4,15 @@ class UsersController < ApplicationController
   before_filter :correct_user,   only: [:edit, :update]
   before_filter :admin_user,     only: :destroy
 
+  
   def index
-    @users = User.paginate(page: params[:page])
-  end
-
+    #@users = User.paginate(page: params[:page])
+	@users = User.all
+#    @pop_users = User.find(:all, :include => User, :order => " SELECT user.followers.count", :limit => 10)
+#	 @order = User.mypost.where(:mypost_id => user.followers.count)
+	#@user = @user.followers.paginate(page: params[:page])
+end
+  
   def show
     @user = User.find(params[:id])
     @microposts = @user.microposts.paginate(page: params[:page])

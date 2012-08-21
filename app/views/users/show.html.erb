@@ -1,37 +1,69 @@
 <% provide(:title, @user.name) %>
 <div class="row">
-  <aside class="span4">
-    <section>
-      <h1>
+  <div class="span3">
+
+      
+
         <%= gravatar_for @user %>
+
         <%= @user.name %>
-      </h1>
+
+    
+      <%= render 'shared/stats_mypost_user' %>
     </section>
-    <section>
-      <%= render 'shared/stats' %>
-    </section>
-  </aside>
-  <div class="span4">
+  </div>
+
+  <div class="span2">
 	    <%= render 'follow_form' if signed_in? %>
-    <% if @user.myposts.any? %>
-      <h3>myposts (<%= @user.myposts.count %>)</h3>
-      <ol class="myposts">
-        <%= render @myposts %>
-      </ol>
-      <%= will_paginate @myposts %>
+		</div>
+       <div class="span4">
+		
+		
+          	  <h1>Мои Посты</h1>
+<% @myposts.each do |mypost| %>  
+	 <div class="item">
+		
+   <span class="badge badge-warning" align="left">  <%= pluralize mypost.reputation_value_for(:votes).to_i, "" %></span>
+    <% if current_user && !current_user.voted_for?(mypost) %>
+<%= link_to "+", vote_mypost_path(mypost, type: "up"), method: "post" %>
+  <%= link_to "-", vote_mypost_path(mypost, type: "down"), method: "post" %>
     <% end %>
-  </div>
+	
+
+	
+<ul id="<%= mypost.id %>">
+<span class="post_info">
+<p><%= link_to gravatar_for(mypost.user), mypost.user %></p>
+ <span class="user" align="right">
+ <%= link_to mypost.user.name, mypost.user %>
+  </span>
+  <span class="timestamp" align="left">
+	    Comments(<%= mypost.comments.count %>)
+   <p> Posted <%= time_ago_in_words(mypost.created_at) %> ago.</p>
+  </span>
+	</ul>
+
+<span class="post_media">
+ <% if mypost.image_url.present? %>
+<p> <p>   <a  class="title"><%= truncate(mypost.content, lenght: 80) %></span></p></p>
+ <class="img_media"><%= link_to  image_tag(mypost.image_url, :height => '200', :width => '300'), mypost %></span>
+  <%  else %>
+  <span class="title"><%= link_to truncate(mypost.content, lenght: 80), mypost %></span>
+<% end %>
+ <% if mypost.video_url.present? %>
+ <span class="title"><%= truncate(mypost.content, lenght: 80) %></span>
+ <class="img_media"><%= link_to  youtube_video_thumb(mypost.video_url), mypost %></span>
+
+<% end %>
+</span>
+
+  </span>
   
-    <div class="span4">
-    <%= render 'follow_form' if signed_in? %>
-    <% if @user.pinposts.any? %>
-      <h3>Pinposts (<%= @user.pinposts.count %>)</h3>
-      <ol class="pinposts">
-        <%= render @pinposts %>
-      </ol>
-      <%= will_paginate @pinposts %>
-    <% end %>
-  </div>
-  
-  </div>
-</div>
+   </div>
+<% end %>
+
+
+	  
+	  
+    </div>
+	    </div>

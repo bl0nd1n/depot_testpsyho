@@ -1,72 +1,42 @@
-#require "bundler/capistrano"
+require 'bundler/capistrano' # Для работы bundler. При изменении гемов bundler автоматически обновит все гемы на сервере, чтобы они в точности соответствовали гемам разработчика. 
 
-#---
-# Excerpted from "Agile Web Development with Rails",
-# published by The Pragmatic Bookshelf.
-# Copyrights apply to this code. It may not be used to create training material, 
-# courses, books, articles, and the like. Contact us if you are in doubt.
-# We make no guarantees that this code is fit for any purpose. 
-# Visit http://www.pragmaticprogrammer.com/titles/rails4 for more book information.
-#---
-# be sure to change these
-set :user, 'root'
-set :domain, '192.168.230.15'
-set :application, 'tweet'
-
-# adjust if you are using RVM, remove if you are not
-#$:.unshift(File.expand_path('./lib', ENV['rvm_path']))
-require "rvm/capistrano"
-set :rvm_ruby_string, '1.9.3'
-# if rvm was installed by root, remove it
-#set :rvm_type, :user
-
-# file paths
-set :repository,  "#{user}@#{domain}:git/#{application}.git" 
-set :deploy_to, "/Railsproject/tweet/" 
-
-# distribute your applications across servers (the instructions below put them
-# all on the same server, defined above as 'domain', adjust as necessary)
-role :app, domain
-role :web, domain
-role :db, domain, :primary => true
-
-# you might need to set this if you aren't seeing password prompts
-default_run_options[:pty] = true
-
-# As Capistrano executes in a non-interactive mode and therefore doesn't cause
-# any of your shell profile scripts to be run, the following might be needed
-# if (for example) you have locally installed gems or applications.  Note:
-# this needs to contain the full values for the variables set, not simply
-# the deltas.
-# default_environment['PATH']='<your paths>:/usr/local/bin:/usr/bin:/bin'
-# default_environment['GEM_PATH']='<your paths>:/usr/lib/ruby/gems/1.8'
-
-# miscellaneous options
-set :deploy_via, :remote_cache
-set :scm, 'git'
-set :branch, 'master'
-set :scm_verbose, true
+set :application, "tweet"
+set :rails_env, "production"
+set :domain, "deployer@188.32.106.76" # Это необходимо для деплоя через ssh. Именно ради этого я настоятельно советовал сразу же залить на сервер свой ключ, чтобы не вводить паролей.
+set :deploy_to, "/srv/#{application}"
 set :use_sudo, false
-set :rails_env, :production
-#set :bundle_cmd, "/root/.rvm/gems/ruby-1.9.3-p194/bin/bundle"
-#set :bundle_cmd, 'source $HOME/.bash_profile && bundle'
+set :unicorn_conf, "#{deploy_to}/current/config/unicorn.rb"
+set :unicorn_pid, "#{deploy_to}/shared/pids/unicorn.pid"
 
+set :rvm_ruby_string, '1.9.3' # Это указание на то, какой Ruby интерпретатор мы будем использовать.
 
+set :scm, :git # Используем git. Можно, конечно, использовать что-нибудь другое - svn, например, но общая рекомендация для всех кто не использует git - используйте git. 
+set :repository,  "git@github.com:myprojects/myapp.git" # Путь до вашего репозитария. Кстати, забор кода с него происходит уже не от вас, а от сервера, поэтому стоит создать пару rsa ключей на сервере и добавить их в deployment keys в настройках репозитария.
+set :branch, "master" # Ветка из которой будем тянуть код для деплоя.
+set :deploy_via, :remote_cache # Указание на то, что стоит хранить кеш репозитария локально и с каждым деплоем лишь подтягивать произведенные изменения. Очень актуально для больших и тяжелых репозитариев.
 
-namespace :deploy do
-  desc "cause Passenger to initiate a restart"
-  task :restart do
-    run "touch #{current_path}/tmp/restart.txt" 
-  end
+role :web, domain
+role :app, domain
+role :db,  domain, :primary => true
 
-  desc "reload the database with seed data"
-  task :seed do
-    run "cd #{current_path}; rake db:seed RAILS_ENV=#{rails_env}"
-  end
+before 'deploy:setup', 'rvm:install_rvm', 'rvm:install_ruby' # интеграция rvm с capistrano настолько хороша, что при выполнении cap deploy:setup установит себя и указанный в rvm_ruby_string руби.
+
+after 'deploy:update_code', :roles => :app do
+  # Здесь для примера вставлен только один конфиг с приватными данными - database.yml. Обычно для таких вещей создают папку /srv/myapp/shared/config и кладут файлы туда. При каждом деплое создаются ссылки на них в нужные места приложения.
+  run "rm -f #{current_release}/config/database.yml"
+  run "ln -s #{deploy_to}/shared/config/database.yml #{current_release}/config/database.yml"
 end
 
-after "deploy:update_code", :bundle_install
-desc "install the necessary prerequisites"
-task :bundle_install, :roles => :app do
-  run "cd #{release_path} && bundle install"
+# Далее идут правила для перезапуска unicorn. Их стоит просто принять на веру - они работают.
+# В случае с Rails 3 приложениями стоит заменять bundle exec unicorn_rails на bundle exec unicorn
+namespace :deploy do
+  task :restart do
+    run "if [ -f #{unicorn_pid} ] && [ -e /proc/$(cat #{unicorn_pid}) ]; then kill -USR2 `cat #{unicorn_pid}`; else cd #{deploy_to}/current && bundle exec unicorn_rails -c #{unicorn_conf} -E #{rails_env} -D; fi"
+  end
+  task :start do
+    run "bundle exec unicorn_rails -c #{unicorn_conf} -E #{rails_env} -D"
+  end
+  task :stop do
+    run "if [ -f #{unicorn_pid} ] && [ -e /proc/$(cat #{unicorn_pid}) ]; then kill -QUIT `cat #{unicorn_pid}`; fi"
+  end
 end

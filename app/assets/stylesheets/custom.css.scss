@@ -3,6 +3,10 @@
 /* mixins, variables, etc. */
 
 $grayMediumLight: #eaeaea;
+$grayLight: #999999;
+$gray: #eaeae5;
+$grayDarker: #eaeae9;
+$grayLighter: #eaeae1;
 
 @mixin box_sizing {
   -moz-box-sizing: border-box; 
@@ -18,7 +22,7 @@ html {
 
 body {
   padding-top: 60px;
-  
+  background: #fffddf;
 }
 
 section {
@@ -43,8 +47,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-
-
   font-size: 3em;
   letter-spacing: -2px;
   margin-bottom: 30px;
@@ -52,8 +54,6 @@ h1 {
 }
 
 h2 {
-
-
   font-size: 1.7em;
   letter-spacing: -1px;
   margin-bottom: 30px;
@@ -71,11 +71,6 @@ p {
 /* header */
 
 #logo {
-
-  font-family: 'Lobster', serif;
-  font-size: 48px;
-  text-shadow: 4px 4px 4px #aaa;
-  
   float: left;
   margin-right: 10px;
   font-size: 1.7em;
@@ -83,11 +78,12 @@ p {
   text-transform: uppercase;
   letter-spacing: -1px;
   padding-top: 9px;
-  font-weight: bold;
+  font-weight: itallic;
   line-height: 1;
   &:hover {
     color: white;
     text-decoration: none;
+  font: italic bold Georgia, serif; 
   }
 }
 
@@ -110,7 +106,7 @@ footer {
   ul {
     float: right;
     list-style: none;
-    li {
+	    li {
       float: left;
       margin-left: 10px;
     }
@@ -169,7 +165,7 @@ aside {
     }
     &:hover {
       text-decoration: none;
-      color: $blue;
+      color: blue;
     }
   }
   strong {
@@ -226,21 +222,104 @@ input, textarea, select, .uneditable-input {
 
 /* microposts */
 
-.microposts {
-  list-style: none;
-  margin: 10px 0 0 0;
-  
-  li {
-    padding: 10px 0;
-    border-top: 1px solid #e8e8e8;
-  }
+.myposts 
+ { width: 32px; height: 32px; -moz-border-radius: 3px; border-radius: 3px; float: left; margin-right: 10px; -moz-box-shadow: 0 1px 1px 0px #ddd; -webkit-box-shadow: 0 1px 1px 0px #ddd; box-shadow: 0 1px 1px 0px #ddd; background: transparent  left top no-repeat; }
+
+
+.item
+{border:1px solid #ffcc00;
+border-radius:19px;
+	padding:2px;
+	width:250px;
+
+	margin:12px 12px 0 0;
+	float:left;
+	background:#F7F7F9;}
+	
+	.item li {color: transparent;}
+	
+.item_feed
+{border:1px solid #ffcc00;
+border-radius:19px;
+	padding:2px;
+	width:450px;
+
+	margin:12px 12px 0 0;
+	float:left;
+	background:#F7F7F9;}
+	
+	.item li {color: transparent;}
+
+.post_info {
+vertical-align: right;
+border-bottom: 1px solid #DDDDDD;
+color: #999999;
+font-size: 11px;
+padding: 5px;
+text-align: right;
+white-space: nowrap;
+position: relative;
+ width:55px;
+ height: px;
+
+}	
+
+.post_media {
+font-size: 11px;
+font-weight: 700;
+height: 34px;
+line-height: 15px;
+margin: 0px 0px 0px;
+overflow: hidden;
+white-space: nowrap;
+align :center;
 }
+.img_media {
+align :center;
+background: #F7F7F9;
+height: 300px;
+overflow: hidden;
+position: inherit;
+width: 325px;
+right: 1px;
+left: 1px;
+}
+	
+	
+	
+.item span .img {
+
+margin: 15px 15px 13px;
+ width:325px;
+ height: 300px;
+ float:left;
+ border-bottom: 1px solid #F7F7F9;}
 
 .content {
   display: block;
 }
 
+.arrow {
+background: url("http://viddy.com/css/img/feed/bg_feed_arrow.png") no-repeat 50%;
+bottom: 0px;
+color: #777777;
+display: block;
+font: normal normal 400 12px/normal Arial;
+height: 8px;
+left: 20px;
+list-style: none;
+margin: 0px;
+outline: #777777 0px;
+padding: 0px;
+position: absolute;
+text-shadow: #FFFFFF 0px 1px 0px;
+vertical-align: baseline;
+width: 16px;
+z-index: 12;
+}
+
 .timestamp {
+
   color: $grayLight;
 }
 
@@ -250,38 +329,3 @@ aside {
     margin-bottom: 5px;
   }
 }
-
-/* pinposts */
-
-.pinposts {
-  list-style: none;
-  margin: 10px 0 0 0;
-
-  li {
-    padding: 10px 0;
-    border-top: 1px solid #e8e8e8;
-  }
-}
-.title {
-   display: block;
-}
-.timestamp {
-  color: $grayLight;
-}
-.gravatar {
-  float: left;
-  margin-right: 10px;
-}
-aside {
-  textarea {
-    height: 100px;
-    margin-bottom: 5px;
-  }
-}
-
-
- .item {
-      width: 180px;
-      margin: 3px;
-      float: left;
-    }

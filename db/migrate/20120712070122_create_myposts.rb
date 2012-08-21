@@ -4,6 +4,8 @@ class CreateMyposts < ActiveRecord::Migration
       t.string :content
       t.integer :user_id
       t.string :image_url
+#	  t.string :video_url
+#	  t.string :post_url
 
       t.timestamps
     end

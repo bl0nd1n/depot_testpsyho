@@ -4,36 +4,70 @@
 <h1>Post</h1>
 
 <% if signed_in? %>
-  <div class="row">
-    <aside class="span4">
+
+<div class="row">
+		 <aside class="span8">
       <section>
-        <%= render 'shared/user_info' %>
+		
+		<%= render 'shared/user_info_mypost' %>
       </section>
       <section>
-        <%= render 'shared/stats' %>
+        <%= render 'shared/stats_mypost_user' %>
 		
       </section>
 	  
       <section>
-        <%= render 'shared/myposts' %>
+		
+        <%= render 'myposts/mypost' %>
+		  
       </section>
     </aside>
 
-	    </div>
-<% else %>
-  <div class="center hero-unit">
-    <h1>Welcome to the Sample App</h1>
+</aside>
+	  
 
-    <h2>
-      This is the home page for the
-      <a href="http://railstutorial.org/">Ruby on Rails Tutorial</a>
-      sample application.
-    </h2>
+ <div class="span4" align="right">
+  <h3>Обсуждаемые</h3>
 
-    <%= link_to "Sign up now!", signup_path, 
-                                class: "btn btn-large btn-primary" %>
-  </div>
+		
+<% @myposts.sort_by(&:comments_count).reverse.each do |mypost| %> 
+	<div class="well" id="<%= mypost.id %>">	    
+	
 
-  <%= link_to image_tag("rails.png", alt: "Rails"), 'http://rubyonrails.org/' %>
+<%= link_to gravatar_for(mypost.user), mypost.user %>
+ <span class="user"> <%= link_to mypost.user.name, mypost.user %> </span>
+ <% if mypost.image_url.present? %>
+  <span class="title"><%= truncate(mypost.content, lenght: 80) %></span>
+ <span class="img"><%= link_to  image_tag(mypost.image_url), mypost %></span>
+  <%  else %>
+  <span class="title"><%= link_to truncate(mypost.content, lenght: 80), mypost %></span>
 <% end %>
+ <% if mypost.video_url.present? %>
+ <span class="title"><%= truncate(mypost.content, lenght: 80) %></span>
+ <span class="img"><%= link_to  youtube_video_thumb(mypost.video_url), mypost %></span>
+ <%  else %>
+  <span class="title"><%= link_to truncate(mypost.content, lenght: 80), mypost %></span>
+<% end %>
+
+ <p> <span class="timestamp">Comments(<%= mypost.comments.count %>)
+<right>Posted <%= time_ago_in_words(mypost.created_at) %> ago.</right></span></p>
+<div class="mypost">
+
+     <%= pluralize mypost.reputation_value_for(:votes).to_i, "vote" %>
+    <% if current_user && !current_user.voted_for?(mypost) %>
+      | <%= link_to "up", vote_mypost_path(mypost, type: "up"), method: "post" %>
+      | <%= link_to "down", vote_mypost_path(mypost, type: "down"), method: "post" %>
+    <% end %>
+
+</div>
+</div>
+<% end %>
+</div>
+</div>	
+	 
+
+
+	 
+   <% end %>
+
 

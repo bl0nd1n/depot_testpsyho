@@ -1,7 +1,7 @@
 <%= form_for @mypost, :html => {:multipart => true} do |f| %>
   <%= render 'shared/error_messages', object: f.object %>
   <div class="field">
-    <%= f.text_area :title, placeholder: "Compose new micropost..." %>
+    <%= f.text_area :title, placeholder: "test new micropost..." %>
   </div>
 
   <%= f.text_field :image, placeholder: "http://" %>

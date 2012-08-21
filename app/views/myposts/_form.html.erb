@@ -1,9 +1,11 @@
 <%= form_for @mypost, :html => {:multipart => true} do |f| %>
   <%= render 'shared/error_messages', object: f.object %>
   <div class="field">
-    <%= f.text_area :content, placeholder: "Compose new micropost..." %>
+    <%= f.text_area :content, placeholder: "Описание вашего поста..." %>
   </div>
-
-  <%= f.text_field :image_url, placeholder: "http://" %>
+  
+ <p><%= f.text_field :video_url, placeholder: "http://Ссылка на видео" %></p>
+<p><%= f.text_field :image_url, placeholder: "http://Ссылка на картинку" %></p>
+ <p> <%= f.text_field :post_url, placeholder: "http://Ссылка на пост" %></p>
   <%= f.submit "Post", class: "btn btn-large btn-primary" %>
 <% end %>

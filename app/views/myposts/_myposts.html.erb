@@ -1,0 +1,15 @@
+
+
+ <% @myposts_all.each do |mypost_all| %>
+	 <div class="item">
+<li id="<%= mypost_all.id %>">
+  <%= link_to gravatar_for(mypost_all.user), mypost_all.user %>
+   <span class="user">
+   <%= link_to mypost_all.user.name, mypost_all.user %>
+  </span>
+   <% if mypost_all.image_url.present? %>
+  <span class="title"><%= truncate(mypost_all.content, lenght: 80) %></span>
+ <span class="img"><%= link_to  image_tag(mypost_all.image_url), mypost %></span>
+  <%  else %>
+  <span class="title"><%= link_to truncate(mypost_all.content, lenght: 80), mypost %></span>
+<% end %>

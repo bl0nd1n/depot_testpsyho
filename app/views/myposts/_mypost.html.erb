@@ -1,14 +1,47 @@
+
 <div id="container">
-
-  <span class="title"><%= mypost.content %></span>
-<div class="center hero-unit">
-   <span class="img"><%=image_tag(mypost.image_url) %></span>
-</div>
-
+	  <p>  <%= render 'shared/follow_form2' if signed_in? %> </p>
+	  <div class="hero-unit">
+<%= render 'myposts/vote' %> 
+   
   <span class="timestamp">
-    Posted <%= time_ago_in_words(mypost.created_at) %> ago.
-
-
+ <% if @mypost.image_url.present?%>
+ 
+ <% if @mypost.post_url.present?%>
+ 
+  <span class="img"><%= link_to  image_tag(@mypost.image_url), @mypost.post_url %></span> 
+  <% else %>
+ <span class="img"><%= link_to  image_tag(@mypost.image_url), mypost %></span>  
+ <% end %>
+ </div>
+<div class="hero-unit">
+	
+	<span class="title"><%= @mypost.content %></span>
+	</div
+	
+  <%  else %>
+  <% if @mypost.video_url.present? %>
+  
+  <span class="img"><%= youtube_video @mypost.video_url %></span> 
+  <div class="hero-unit">
+	<span class="title"><%= @mypost.content %></span>
+    </div>
+ <%  else %>
+ <div class="hero-unit">
+ <span class="title"><%= link_to @mypost.content, mypost %></span></div>
+	<% end %>
+    <% end %>
 
 </div>
 
+   <p> Posted <%= time_ago_in_words(@mypost.created_at) %> ago.</p></span>
+
+<h2>Comments(<%= @mypost.comments.count %>)</h2>
+	 
+	<p><%= link_to 'Add a Comment', new_mypost_comment_path(@mypost) %></p>
+	 
+	<ul class="comment_list">
+	  <%= render :partial => 'comments/comment', :collection => @mypost.comments %>
+	</ul>
+
+</div>

@@ -1,5 +1,14 @@
 SampleApp::Application.routes.draw do
-
+resources :comments do
+ member { post :vote }
+      resources :comments
+	  end
+	 
+	  resources :myposts do
+	  member { post :vote }
+	  resources :comments
+	  
+	  end
 
 
 
@@ -18,14 +27,15 @@ SampleApp::Application.routes.draw do
       
 	  
 	  
-  root to: 'static_pages#home'
+  root to: 'myposts#index'
 
+  match '/myfeed',  to: 'static_pages#home'
   match '/signup',  to: 'users#new'
   match '/signin',  to: 'sessions#new'
   match '/signout', to: 'sessions#destroy', via: :delete
       
   match '/help',    to: 'static_pages#help'
-  
+  match '/fresh',    to: 'myposts#fresh'
   match '/pins',    to: 'static_pages#pins'
  match '/myposts',    to: 'myposts#index' 
  match '/myposts/:id',    to: 'myposts#show' 

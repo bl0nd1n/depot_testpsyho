@@ -1,0 +1,81 @@
+		<script>
+$(function(){
+$('#container').masonry({
+  itemSelector: '.item'
+
+});
+});
+	</script>
+  <div class="row">
+  
+    
+    <div class="span12">
+		
+		
+          	  <h1>Свежие</h1>
+			  <div id="container">
+<% @myposts.each do |mypost| %>  
+
+	 <div class="item">
+	
+   <ul class="badge badge-warning" align="right">    <% if current_user && !current_user.voted_for?(mypost) %>
+<%= link_to image_tag("rating_t_up.gif"), vote_mypost_path(mypost, type: "up"), method: "post" %>
+  <%= link_to image_tag("rating_t_down.gif"), vote_mypost_path(mypost, type: "down"), method: "post" %>
+    <% end %>	<%= pluralize mypost.reputation_value_for(:votes).to_i, "" %></ul>
+
+	
+<id="<%= mypost.id %>">
+<span class="gravatar" align="left">
+			  <% if mypost.user.avatar.present? %>
+	<p>	    <%= link_to image_tag(mypost.user.avatar,  :size => "52x52" ), mypost.user%></p>
+			<%else%>
+<p><%= link_to gravatar_for(mypost.user), mypost.user %></p>
+  <%end%>
+</span>
+ <span class="user" align="left">
+ <%= link_to mypost.user.name, mypost.user %>
+  </span>
+  <span class="timestamp" align="left">
+	   <p> Комментариев(<%= mypost.comments.count %>)
+    </span>
+	
+<p>
+<span  class="title" aligh="center"><%= truncate(mypost.content, lenght: 80) %></span></p>
+ <% if mypost.image_url.present? %>
+ <span class="img_media"><%= link_to  image_tag(mypost.image_url,   :size => "250x300"), mypost %></span>
+<% end %>
+ <% if mypost.video_url.present? %>
+ <span class="img_media"><%= link_to  youtube_video_thumb(mypost.video_url), mypost %></span>
+<% end %>
+  <ul class="timestamp" align="center">
+
+   <%= time_ago_in_words(mypost.created_at) %> назад
+  </ul>
+
+ </ul>
+     </div>
+	
+<% end %>
+
+     </div>
+	  
+	  
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

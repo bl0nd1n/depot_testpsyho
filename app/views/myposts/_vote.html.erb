@@ -1,0 +1,9 @@
+<div class="mypost">
+
+     <%= pluralize @mypost.reputation_value_for(:votes).to_i, "vote" %>
+    <% if current_user && !current_user.voted_for?(@mypost) %>
+      | <%= link_to "up", vote_mypost_path(@mypost, type: "up"), method: "post" %>
+      | <%= link_to "down", vote_mypost_path(@mypost, type: "down"), method: "post" %>
+    <% end %>
+
+</div>

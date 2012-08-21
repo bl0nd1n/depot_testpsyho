@@ -6,6 +6,7 @@ class StaticPagesController < ApplicationController
       @feed_items = current_user.feed.paginate(page: params[:page])
 	  @feed_me_items = current_user.feed_me.paginate(page: params[:page])
 	  @mypost = current_user.myposts.build if signed_in?
+	 # @mypost_all = Myposts.find(params[:id])
     end
   end
   
